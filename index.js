@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const NewmanRunner = require('./src/newman-parallel.js')
 
   if (process.argv.length <= 2) {

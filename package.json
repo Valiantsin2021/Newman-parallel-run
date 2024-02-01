@@ -1,5 +1,5 @@
 {
-  "name": "newman-parallel-run",
+  "name": "newman-parallel",
   "version": "1.0.0",
   "description": "A framework to execute multiple postman collections in single run with newman.",
   "main": "index.js",
@@ -33,6 +33,9 @@
   ],
   "author": "Valentin Lutchanka",
   "license": "Apache-2.0",
+  "bin": {
+    "newman-parallel": "./index.js"
+  },
   "dependencies": {
     "@felipecrs/newman-reporter-allure": "1.1.2",
     "allure-commandline": "2.26.0",
