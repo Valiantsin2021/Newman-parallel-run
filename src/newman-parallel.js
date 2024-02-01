@@ -81,7 +81,7 @@ class NewmanRunner {
     product
       ? (collections = (await NewmanRunner.readFolder(args[0])).filter((collection) => {
           const collectionName = collection.split('/').pop().replace('.postman_collection.json', '')
-          return collectionName === product
+          return collectionName.includes(product)
         }))
       : (collections = await NewmanRunner.readFolder(args[0]))
 
