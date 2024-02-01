@@ -16,10 +16,13 @@ newman-parallel [options]
 
 ### Command-Line Options
 
-path: Path to the folder containing Postman collections.
-path: Path to the folder containing Postman environments.
-name: (Optional) Name of the collection/product to filter the collections.
-name: (Optional) Name of the environment to use.
+- path: Path to the folder containing Postman collections.
+
+- path: Path to the folder containing Postman environments.
+
+- name: (Optional) Name of the collection/product to filter the collections.
+
+- name: (Optional) Name of the environment to use.
 
 ### Examples
 
