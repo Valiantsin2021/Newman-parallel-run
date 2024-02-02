@@ -1,15 +1,11 @@
 {
   "name": "newman-parallel",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A framework to execute multiple Postman collections in parallel run with Newman.Includes Allure, HTML-extra and Junit reporters integrations",
   "main": "index.js",
   "scripts": {
-    "pretest": "rimraf ./reports/allure/* && rimraf ./reports/html/* && rimraf ./reports/xml/*",
-    "test": "node index.js",
-    "test:parallel": "npm run pretest && node ./src/main-parallel.js && npm run posttest",
-    "allure-serve": "allure serve reports/allure",
-    "posttest": "npm run history && allure generate ./reports/allure -o ./reports/allure-report --clean && npx allure-patch ./reports/allure-report",
-    "history": "mkdir ./reports/allure/history && cp ./reports/allure-report/history/* ./reports/allure/history"
+    "pretest": "rimraf ./allure-results/* && rimraf ./report/html/* && rimraf ./report/xml/*",
+    "test": "node index.js collections environments C=gorest E=accep"
   },
   "husky": {
     "hooks": {
@@ -25,20 +21,26 @@
     ]
   },
   "keywords": [
-    "postman",
+    "allure",
     "newman",
+    "reporter",
+    "reports",
     "api",
-    "collections",
-    "allure"
+    "postman",
+    "tests"
   ],
   "author": "Valentin Lutchanka",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Valiantsin2021/Newman-parallel-run"
+  },
   "bin": {
     "newman-parallel": "./index.js"
   },
   "dependencies": {
     "@felipecrs/newman-reporter-allure": "1.1.2",
-    "allure-commandline": "2.26.0",
+    "allure-commandline": "2.27.0",
     "allure-patch": "^1.0.3",
     "async": "^3.2.5",
     "newman": "6.1.0",
