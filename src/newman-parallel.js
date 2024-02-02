@@ -72,19 +72,36 @@ class NewmanRunner {
     let env = process.env.ENV || args.filter((arg) => arg.includes('E='))[0]
 
     let collections, environment
+    // Check the ALL argument passed in CLI
+    let runAll = args.filter((arg) => /ALL/.test(arg)).length > 0
+    // Extract from args collection name to check
     if (!!product) {
       product = product.split('=')[1]
     }
+    // Extract from args env name to check
     if (!!env) {
       env = env.split('=')[1]
     }
     product
-      ? (collections = (await NewmanRunner.readFolder(args[0])).filter((collection) => {
+      ? // If the collection name in args - filter collections with the name provided
+        (collections = (await NewmanRunner.readFolder(args[0])).filter((collection) => {
           const collectionName = collection.split('/').pop().replace('.postman_collection.json', '')
+          runAll = false
           return collectionName.includes(product)
         }))
-      : (collections = await NewmanRunner.readFolder(args[0]))
+      : // Else check the env variables with the collection name are true
+        (collections = (await NewmanRunner.readFolder(args[0])).filter((collection) => {
+          const collectionName = collection.split('/').pop().replace('.postman_collection.json', '')
+          return process.env[collectionName] === 'True'
+        }))
 
+    // If ALL arg present - run all the collections from the folder
+    if (collections.length === 0 && runAll) {
+      collections = await NewmanRunner.readFolder(args[0])
+    } else if (collections.length === 0) {
+      console.log('\x1b[31mNo collections specified to run\x1b[0m')
+      return
+    }
     env ? (environment = (await NewmanRunner.readFolder(args[1])).filter((el) => el.includes(env)).join('')) : (environment = null)
 
     const collectionToRun = collections.map((collection) => {
