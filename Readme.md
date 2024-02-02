@@ -35,33 +35,22 @@ newman-parallel [options]
   
 ### Examples
 
-Run collections without specifying collection/product name or environment name:
-
-```bash
-newman-parallel /path/to/collections /path/to/environments
-```
-
 Run all the collections that matching the MyCollection with no environment used:
 
 ```bash
 newman-parallel /path/to/collections /path/to/environments C=MyCollection
 ```
 
-Run collections for a specific product with a specific environment:
+Run collections for a specific name with a specific environment:
 
 ```bash
 newman-parallel /path/to/collections /path/to/environments C=MyCollection E=MyEnvironment
 ```
-Run collections for a all collections with a specific environment:
+
+Run collections with a specific environment file(or without) depending on the environment variables specified:
 
 ```bash
-newman-parallel /path/to/collections /path/to/environments E=MyEnvironment
-```
-
-Run collections with a specific environment (or without env) depending on the environment variables specified:
-
-```bash
-# this will run collections that have XXX and YYY names
+# this will run collections that have XXX and YYY names using Bash/GitBash
 
 export XXX=True
 export YYY=True
@@ -74,15 +63,15 @@ newman-parallel /path/to/collections /path/to/environments
 Run all the collections with a ALL argument passed (with or without environment):
 
 ```bash
-# this will run all collections
+# this will run all collections without environment file
 newman-parallel /path/to/collections /path/to/environments ALL
-# this will run all collections with specified environment
+# this will run all collections with specified environment file
 newman-parallel /path/to/collections /path/to/environments ALL E=MyEnvironment
 
 ```
 ### Notes
 
-If no collection/product name is provided, the script runs all collections in the specified folder.
+If no collection/product name and ALL arg provided, the script runs all collections in the specified folder.
 If no environment name is provided, the script does not use any environment.
 
 ### Contributing
