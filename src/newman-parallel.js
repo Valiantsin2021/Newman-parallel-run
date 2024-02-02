@@ -1,7 +1,7 @@
 const async = require('async')
 const newman = require('newman')
 const fs = require('fs').promises
-
+const path = require('path')
 /**
  * Class representing a Newman Runner.
  */
@@ -37,7 +37,7 @@ class NewmanRunner {
    */
   static async readFolder(folderPath) {
     try {
-      const files = await fs.readdir(folderPath)
+      const files = await fs.readdir(path.resolve(folderPath))
       return files.map((file) => `${folderPath}/${file}`)
     } catch (err) {
       console.error(`Failed to read folder ${folderPath} with error: ${err.message}`)
