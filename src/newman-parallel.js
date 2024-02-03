@@ -2,11 +2,13 @@ const async = require('async')
 const newman = require('newman')
 const fs = require('fs').promises
 const path = require('path')
+const { exec } = require('child_process')
 const globalCache = global
 /**
  * Class representing a Newman Runner.
  */
 class NewmanRunner {
+  static counter
   /**
    * The path to the Allure results directory.
    * @type {string}
@@ -103,6 +105,7 @@ class NewmanRunner {
       console.log('\x1b[31mNo collections specified to run\x1b[0m')
       return
     }
+    NewmanRunner.counter = collections.length
     env ? (environment = (await NewmanRunner.readFolder(args[1])).filter((el) => el.includes(env)).join('')) : (environment = null)
 
     const collectionToRun = collections.map((collection) => {
@@ -144,6 +147,12 @@ class NewmanRunner {
           })
           .on('done', () => {
             global = globalCache
+            NewmanRunner.counter -= 1
+            if (NewmanRunner.counter === 0) {
+              console.log(`\x1b[34m==> Generating Allure report \u235f\x1b[0m`)
+              const command = 'npx allure generate --clean && npx allure-patch ./allure-report && rm -r ./allure-results'
+              exec(command)
+            }
           })
       }
       done()

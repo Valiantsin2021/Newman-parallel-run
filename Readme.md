@@ -2,7 +2,11 @@
 
 Newman Parallel is an npm package that executes Postman collections in parallel, saving time by running them concurrently. It supports reading collections and environments from separate folders and provides flexibility through command-line arguments.
 
-The package has integrated Newman, Allure (allure-results generated automatically), HTML-extra reporter, and Junit for CI
+The package has integrated Newman, Allure (allure-results generated automatically), HTMLextra reporter, and Junit for CI.
+
+HTMLextra and Junit reports will e generated in report folder. Allure report will be generated to allure-report folder after all the collections have ran.
+
+For Allure report the command "npx allure generate --clean && npx allure-patch ./allure-report && rm -rf ./allure-report" will ran automatically after all the collections have ran. It will generate the Allure html report as a single page app to be sent via email, webhook or published as a static webpage.
 
 ## Installation
 
