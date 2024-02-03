@@ -2,6 +2,7 @@ const async = require('async')
 const newman = require('newman')
 const fs = require('fs').promises
 const path = require('path')
+const globalCache = global
 /**
  * Class representing a Newman Runner.
  */
@@ -134,12 +135,16 @@ class NewmanRunner {
      */
     const parallelCollectionRun = function (done) {
       for (let index = 0; index < collectionToRun.length; index++) {
-        newman.run(collectionToRun[index], function (err) {
-          if (err) {
-            throw err
-          }
-          console.log(`\x1b[34m==> ${collections[index]} is finished \u235f\x1b[0m`)
-        })
+        newman
+          .run(collectionToRun[index], function (err) {
+            if (err) {
+              throw err
+            }
+            console.log(`\x1b[34m==> ${collections[index]} is finished \u235f\x1b[0m`)
+          })
+          .on('done', () => {
+            global = globalCache
+          })
       }
       done()
     }
