@@ -8,6 +8,11 @@ const globalCache = global
  * Class representing a Newman Runner.
  */
 class NewmanRunner {
+  /**
+   * The counter to check the remaining collections to run.
+   * @type {number}
+   * @static
+   */
   static counter
   /**
    * The path to the Allure results directory.
@@ -28,7 +33,12 @@ class NewmanRunner {
    * @type {string[]}
    * @static
    */
-  static NEWMAN_REPORT_OPTIONS = ['cli', 'htmlextra', 'junitfull', '@felipecrs/allure']
+  static NEWMAN_REPORT_OPTIONS = [
+    'cli',
+    'htmlextra',
+    'junitfull',
+    '@felipecrs/allure'
+  ]
 
   /**
    * Reads files from a specified folder.
@@ -41,9 +51,11 @@ class NewmanRunner {
   static async readFolder(folderPath) {
     try {
       const files = await fs.readdir(path.resolve(folderPath))
-      return files.map((file) => `${folderPath}/${file}`)
+      return files.map(file => `${folderPath}/${file}`)
     } catch (err) {
-      console.error(`Failed to read folder ${folderPath} with error: ${err.message}`)
+      console.error(
+        `Failed to read folder ${folderPath} with error: ${err.message}`
+      )
       throw err
     }
   }
@@ -67,36 +79,47 @@ class NewmanRunner {
      * The name of the collection or product to filter the coollections list.
      * @type {string}
      */
-    let product = process.env.COLLECTION || args.filter((arg) => arg.includes('C='))[0]
+    let product =
+      process.env.COLLECTION || args.filter(arg => arg.includes('C='))[0]
     /**
      * The name of the environment to run with the coollections list.
      * @type {string}
      */
-    let env = process.env.ENV || args.filter((arg) => arg.includes('E='))[0]
+    let env = process.env.ENV || args.filter(arg => arg.includes('E='))[0]
 
     let collections, environment
     // Check the ALL argument passed in CLI
-    let runAll = args.filter((arg) => /ALL/.test(arg)).length > 0
+    let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
     // Extract from args collection name to check
-    if (!!product) {
+    if (product) {
       product = product.split('=')[1]
     }
     // Extract from args env name to check
-    if (!!env) {
+    if (env) {
       env = env.split('=')[1]
     }
     product
       ? // If the collection name in args - filter collections with the name provided
-        (collections = (await NewmanRunner.readFolder(args[0])).filter((collection) => {
-          const collectionName = collection.split('/').pop().replace('.postman_collection.json', '')
-          runAll = false
-          return collectionName.includes(product)
-        }))
+        (collections = (await NewmanRunner.readFolder(args[0])).filter(
+          collection => {
+            const collectionName = collection
+              .split('/')
+              .pop()
+              .replace('.postman_collection.json', '')
+            runAll = false
+            return collectionName.includes(product)
+          }
+        ))
       : // Else check the env variables with the collection name are true
-        (collections = (await NewmanRunner.readFolder(args[0])).filter((collection) => {
-          const collectionName = collection.split('/').pop().replace('.postman_collection.json', '')
-          return process.env[collectionName] === 'True'
-        }))
+        (collections = (await NewmanRunner.readFolder(args[0])).filter(
+          collection => {
+            const collectionName = collection
+              .split('/')
+              .pop()
+              .replace('.postman_collection.json', '')
+            return process.env[collectionName] === 'True'
+          }
+        ))
 
     // If ALL arg present - run all the collections from the folder
     if (collections.length === 0 && runAll) {
@@ -106,10 +129,17 @@ class NewmanRunner {
       return
     }
     NewmanRunner.counter = collections.length
-    env ? (environment = (await NewmanRunner.readFolder(args[1])).filter((el) => el.includes(env)).join('')) : (environment = null)
+    env
+      ? (environment = (await NewmanRunner.readFolder(args[1]))
+          .filter(el => el.includes(env))
+          .join(''))
+      : (environment = null)
 
-    const collectionToRun = collections.map((collection) => {
-      const file_name = collection.split('/').at(-1).replace('.postman_collection.json', `_${env}`)
+    const collectionToRun = collections.map(collection => {
+      const file_name = collection
+        .split('/')
+        .at(-1)
+        .replace('.postman_collection.json', `_${env}`)
       return {
         collection: collection,
         environment: environment,
@@ -143,15 +173,21 @@ class NewmanRunner {
             if (err) {
               throw err
             }
-            console.log(`\x1b[34m==> ${collections[index]} is finished \u235f\x1b[0m`)
+            console.log(
+              `\x1b[34m==> ${collections[index]} is finished \u235f\x1b[0m`
+            )
           })
           .on('done', () => {
             global = globalCache
             NewmanRunner.counter -= 1
             if (NewmanRunner.counter === 0) {
               console.log(`\x1b[34m==> Generating Allure report \u235f\x1b[0m`)
-              const command = 'npx allure generate --clean && npx allure-patch ./allure-report && rm -r ./allure-results'
-              exec(command)
+              const createHistory =
+                'cp -r allure-report/history allure-results || echo "no history folder found"'
+              const generateReport =
+                'npx allure generate --clean && npx allure-patch ./allure-report && rm -r ./allure-results'
+              exec(createHistory)
+              exec(generateReport)
             }
           })
       }
@@ -173,7 +209,9 @@ class NewmanRunner {
 
 const args = process.argv.slice(2)
 if (args.length < 2) {
-  console.error("\x1b[31mPlease provide path to the collections and environments files\nEx: './collections' './environments'\x1b[0m")
+  console.error(
+    "\x1b[31mPlease provide path to the collections and environments files\nEx: './collections' './environments'\x1b[0m"
+  )
   process.exit()
 }
 module.exports = NewmanRunner

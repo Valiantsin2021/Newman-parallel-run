@@ -1,11 +1,12 @@
 {
   "name": "newman-parallel",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "A framework to execute multiple Postman collections in parallel run with Newman.Includes Allure, HTML-extra and Junit reporters integrations",
   "main": "index.js",
   "scripts": {
-    "pretest": "rimraf ./allure-results/* && rimraf ./report/html/* && rimraf ./report/xml/*",
-    "test": "node index.js collections environments C=gorest E=accep"
+    "test": "node index.js collections environments C=gorest E=accep",
+    "lint": "npx eslint ./src/*.js --fix",
+    "format": "prettier --write ./src/*.js"
   },
   "husky": {
     "hooks": {
@@ -52,7 +53,6 @@
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
     "husky": "^4.3.8",
-    "prettier": "3.2.4",
-    "rimraf": "3.0.0"
+    "prettier": "3.2.4"
   }
 }

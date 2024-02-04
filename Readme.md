@@ -6,7 +6,9 @@ The package has integrated Newman, Allure (allure-results generated automaticall
 
 HTMLextra and Junit reports will e generated in report folder. Allure report will be generated to allure-report folder after all the collections have ran.
 
-For Allure report the command "npx allure generate --clean && npx allure-patch ./allure-report && rm -rf ./allure-report" will ran automatically after all the collections have ran. It will generate the Allure html report as a single page app to be sent via email, webhook or published as a static webpage.
+For Allure report the command "npx allure generate --clean && npx allure-patch ./allure-report && rm -rf ./allure-report" will ran automatically after all the collections have ran. It will generate the Allure html report patch it as a single page app to be sent via email, webhook or published as a static webpage.
+
+Allure report with history will be generated only if you use GitBash/Bash. If you run the tests in Powershell the history will not be generated automatically.
 
 ## Installation
 
