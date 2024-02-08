@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🗣 Ask a Question, Discuss
+    url: https://medium.com/@lutchenkovalentin/run-multiple-postman-api-collections-with-newman-in-parallel-with-automated-html-report-generation-435aa92a1985
+    about: Get help using newman-parallel

@@ -59,7 +59,45 @@ class NewmanRunner {
       throw err
     }
   }
+  /**
+   * Parses arguments to extract collection and environment names.
+   * @param {string[]} args - Command line arguments.
+   * @returns {{product: string|undefined, env: string|undefined, runAll:boolean}} - Collection and environment names.
+   */
+  static parseArgs(args) {
+    // Extract collection and environment names from arguments
+    let product =
+      process.env.COLLECTION || args.filter(arg => arg.includes('C='))[0]
+    let envName = process.env.ENV || args.filter(arg => arg.includes('E='))[0]
 
+    // If collection name is provided in arguments, extract it
+    if (product) {
+      product = product.split('=')[1] ?? product
+    }
+
+    // If environment name is provided in arguments, extract it
+    if (envName) {
+      envName = envName.split('=')[1]
+    }
+    // Check the ALL argument passed in CLI
+    let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
+    return { product: product, env: envName, runAll: runAll }
+  }
+  /**
+   * @param {string} folderpath pathfolders from CLI arguments
+   * @param {string|undefined} env name of the environment parsed from the CLI arguments
+   * @returns {Promise<string>} environment file path
+   */
+  static async getEnvironment(folderpath, env) {
+    let environment
+    env
+      ? (environment = (await NewmanRunner.readFolder(folderpath))
+          .filter(el => el.includes(env))
+          .join(''))
+      : (environment = undefined)
+    // @ts-ignore
+    return environment
+  }
   /**
    * Runs Newman collections asynchronously in parallel.
    * @param {string[]} args - The command-line arguments
@@ -75,67 +113,51 @@ class NewmanRunner {
    * <node command> <path to collections> <path to envs> <name of the collection> <name of the env>
    */
   static async runCollections(args, PARALLEL_RUN_COUNT = 1) {
+    let { product, env, runAll } = NewmanRunner.parseArgs(args)
+    const environment = await NewmanRunner.getEnvironment(args[1], env)
     /**
-     * The name of the collection or product to filter the coollections list.
-     * @type {string}
+     * Filters collections based on provided criteria.
+     * @param {string} folderPath - Path of the folder containing collections.
+     * @param {string|null} product - Name of the collection to filter (optional).
+     * @returns {Promise<string[]>} - Filtered list of collections.
      */
-    let product =
-      process.env.COLLECTION || args.filter(arg => arg.includes('C='))[0]
-    /**
-     * The name of the environment to run with the coollections list.
-     * @type {string}
-     */
-    let env = process.env.ENV || args.filter(arg => arg.includes('E='))[0]
+    async function filterCollections(folderPath, product) {
+      let collections = await NewmanRunner.readFolder(folderPath)
+      collections = collections.filter(collection => {
+        // @ts-ignore
+        const collectionName = collection
+          .split('/')
+          .pop()
+          .replace('.postman_collection.json', '')
+        if (product) {
+          runAll = false
+          return collectionName.includes(product)
+        } else {
+          return process.env[collectionName] === 'True'
+        }
+      })
+      return collections
+    }
 
-    let collections, environment
-    // Check the ALL argument passed in CLI
-    let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
-    // Extract from args collection name to check
+    let collections
     if (product) {
-      product = product.split('=')[1]
+      collections = await filterCollections(args[0], product)
+    } else {
+      collections = await filterCollections(args[0], null)
     }
-    // Extract from args env name to check
-    if (env) {
-      env = env.split('=')[1]
-    }
-    product
-      ? // If the collection name in args - filter collections with the name provided
-        (collections = (await NewmanRunner.readFolder(args[0])).filter(
-          collection => {
-            const collectionName = collection
-              .split('/')
-              .pop()
-              .replace('.postman_collection.json', '')
-            runAll = false
-            return collectionName.includes(product)
-          }
-        ))
-      : // Else check the env variables with the collection name are true
-        (collections = (await NewmanRunner.readFolder(args[0])).filter(
-          collection => {
-            const collectionName = collection
-              .split('/')
-              .pop()
-              .replace('.postman_collection.json', '')
-            return process.env[collectionName] === 'True'
-          }
-        ))
 
     // If ALL arg present - run all the collections from the folder
     if (collections.length === 0 && runAll) {
       collections = await NewmanRunner.readFolder(args[0])
     } else if (collections.length === 0) {
-      console.log('\x1b[31mNo collections specified to run\x1b[0m')
+      console.log(
+        '\x1b[31mNo collections specified to run\nProvide CLI args: "C=<collection name>" or "ALL" and optionally "E=<environment name>"\x1b[0m'
+      )
       return
     }
     NewmanRunner.counter = collections.length
-    env
-      ? (environment = (await NewmanRunner.readFolder(args[1]))
-          .filter(el => el.includes(env))
-          .join(''))
-      : (environment = null)
-
     const collectionToRun = collections.map(collection => {
+      // @ts-ignore
       const file_name = collection
         .split('/')
         .at(-1)

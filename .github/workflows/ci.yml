@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+    build:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+              os: [windows-latest, macOS-latest, ubuntu-latest]
+              node-version: [20.x]
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                node-version: ${{ matrix.node-version }}
+
+            - name: npm install, and test
+              run: |
+                npm install
+                npm test
+              env:
+                CI: true
+            - uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                name: allure-report
+                path: allure-report
+                retention-days: 30
+            - name: Deploy report to Github Pages
+              if: always()
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: allure-report
