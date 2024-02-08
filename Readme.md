@@ -1,5 +1,7 @@
 # Newman Parallel
 
+[![CI](https://github.com/Valiantsin2021/Newman-parallel-run/actions/workflows/ci.yml/badge.svg)](https://github.com/Valiantsin2021/Newman-parallel-run/actions/workflows/ci.yml)
+
 Newman Parallel is an npm package that executes Postman collections in parallel, saving time by running them concurrently. It supports reading collections and environments from separate folders and provides flexibility through command-line arguments.
 
 The package has integrated Newman, Allure (allure-results generated automatically), HTMLextra reporter, and Junit for CI.
