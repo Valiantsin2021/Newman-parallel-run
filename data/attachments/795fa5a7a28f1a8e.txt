@@ -1,0 +1,9 @@
+var responseJSON;
+try {
+    tests["Body contains cookies"] = responseBody.has("cookies");
+    responseJSON = JSON.parse(responseBody);
+    tests["Cookies object is empty"] = (Object.keys(responseJSON.cookies).length > 0)
+}
+catch (e) { }
+
+tests["Status code is 200"] = responseCode.code === 200;
