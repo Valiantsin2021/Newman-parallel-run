@@ -32,11 +32,11 @@ newman-parallel [options]
 
 - path: (Required) Path to the folder containing Postman environments.
 
-- name: (Optional) Name of the collection/product to filter the collections.
+- name: (Required if no ALL arg provided or no env variables set) Name of the collection/product to filter the collections.
 
 - name: (Optional) Name of the environment to use.
   
-- ALL: (Optional) to run all the collections from the forlder
+- ALL: (Required if no C=<name> argument provided or no env variables set) to run all the collections from the forlder
 
 ### Environment variables
 
@@ -82,19 +82,9 @@ newman-parallel /path/to/collections /path/to/environments ALL E=MyEnvironment
 ### Notes
 
 If no collection/product name and ALL arg provided, the script runs all collections in the specified folder.
+
 If no environment name is provided, the script does not use any environment.
-If you want to generate allure report you have to have installed as devDependencies the allure-commandline and allure-patch
 
-```bash
-npm i -D allure-commandline allure-patch
-```
-
- and after that you can use the command
-
-```bash
-newman-parallel /path/to/collections /path/to/environments ALL && npx allure generate --clean && npx allure-patch ./allure-report
-# it will generate the allure html report as a single page app
-```
 
 ### Contributing
 

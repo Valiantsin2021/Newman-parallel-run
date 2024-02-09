@@ -1,17 +1,20 @@
-on:
+# https://docs.github.com/en/actions
+
+name: "Release"
+
+on: # yamllint disable-line rule:truthy
   push:
-    branches:
-      - main
-permissions:
-  contents: write
-  pull-requests: read
+    tags:
+      - "v*"
+
 jobs:
-  release-on-push:
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release:
+    name: "Release"
+
+    runs-on: "ubuntu-latest"
+
     steps:
-      - uses: rymndhng/release-on-push-action@master
+      - name: "Create release"
+        uses: "ergebnis/.github/actions/github/release/create@1.8.0"
         with:
-          bump_version_scheme: patch
-          use_github_release_notes: true
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
