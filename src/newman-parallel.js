@@ -66,21 +66,20 @@ class NewmanRunner {
    */
   static parseArgs(args) {
     // Extract collection and environment names from arguments
-    let product =
-      process.env.COLLECTION || args.filter(arg => arg.includes('C='))[0]
-    let envName = process.env.ENV || args.filter(arg => arg.includes('E='))[0]
-
+    let product = args.filter(arg => arg.includes('C='))[0]
+    let envName = args.filter(arg => arg.includes('E='))[0]
+    // Check the ALL argument passed in CLI
+    let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
     // If collection name is provided in arguments, extract it
     if (product) {
       product = product.split('=')[1] ?? product
     }
-
     // If environment name is provided in arguments, extract it
-    if (envName) {
+    if (envName?.includes('=')) {
       envName = envName.split('=')[1]
+    } else {
+      envName = process.env.ENV || ''
     }
-    // Check the ALL argument passed in CLI
-    let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
     return { product: product, env: envName, runAll: runAll }
   }
   /**

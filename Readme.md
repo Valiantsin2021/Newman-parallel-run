@@ -42,6 +42,7 @@ newman-parallel [options]
 
 - the process logic will check the environment variables if there is no Name of the collection/product passed in arguments
 - If environment variable equal to the name of the collection's filename is set to true, the framework will run the collection/s that match.
+- If the environment variable ENV is set to name of the enfironment file, the framework will use this environment file (in such case you do not need to pass arg E=<name>, otherwise it will have priority over the ENV var)
   
 ### Examples
 
