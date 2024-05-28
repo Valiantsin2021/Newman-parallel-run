@@ -66,13 +66,16 @@ class NewmanRunner {
    */
   static parseArgs(args) {
     // Extract collection and environment names from arguments
-    let product = args.filter(arg => arg.includes('C='))[0]
-    let envName = args.filter(arg => arg.includes('E='))[0]
+    let product = args.filter(arg => arg.includes('C='))[0] ?? ''
+    let envName = args.filter(arg => arg.includes('E='))[0] ?? ''
     // Check the ALL argument passed in CLI
     let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
     // If collection name is provided in arguments, extract it
-    if (product) {
+    if (product && product.includes('=')) {
       product = product.split('=')[1] ?? product
+    }
+    if (product.includes(',')) {
+      product = product.split(',')
     }
     // If environment name is provided in arguments, extract it
     if (envName?.includes('=')) {
@@ -128,9 +131,12 @@ class NewmanRunner {
           .split('/')
           .pop()
           .replace('.postman_collection.json', '')
-        if (product) {
+        if (typeof product === 'string') {
           runAll = false
           return collectionName.includes(product)
+        } else if (Array.isArray(product)) {
+          runAll = false
+          return product.includes(collectionName)
         } else {
           return process.env[collectionName] === 'True'
         }

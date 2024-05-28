@@ -32,9 +32,9 @@ newman-parallel [options]
 
 - path: (Required) Path to the folder containing Postman environments.
 
-- name: (Required if no ALL arg provided or no env variables set) Name of the collection/product to filter the collections.
+- C=(name): (Required if no ALL arg provided or no env variables set) Name of the collection/product to filter the collections.
 
-- name: (Optional) Name of the environment to use.
+- E=(name): (Optional) Name of the environment to use.
   
 - ALL: (Required if no C=<name> argument provided or no env variables set) to run all the collections from the forlder
 
@@ -55,7 +55,13 @@ newman-parallel /path/to/collections /path/to/environments C=MyCollection
 Run collections for a specific name with a specific environment:
 
 ```bash
+# this will run collection that have MyCollection name using Bash/GitBash
+
 newman-parallel /path/to/collections /path/to/environments C=MyCollection E=MyEnvironment
+
+# this will run collection that have MyCollection and MyCollection2 name using Bash/GitBash
+
+newman-parallel /path/to/collections /path/to/environments C=MyCollection,MyCollection2 E=MyEnvironment
 ```
 
 Run collections with a specific environment file(or without) depending on the environment variables specified:
