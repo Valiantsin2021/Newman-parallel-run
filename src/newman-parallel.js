@@ -62,12 +62,14 @@ class NewmanRunner {
   /**
    * Parses arguments to extract collection and environment names.
    * @param {string[]} args - Command line arguments.
-   * @returns {{product: string|undefined, env: string|undefined, runAll:boolean}} - Collection and environment names.
+   * @returns {{product: string|undefined, env: string|undefined, data: string|undefined, runAll:boolean}} - Collection and environment names.
    */
   static parseArgs(args) {
     // Extract collection and environment names from arguments
     let product = args.filter(arg => arg.includes('C='))[0] ?? ''
     let envName = args.filter(arg => arg.includes('E='))[0] ?? ''
+    let data = args.filter(arg => arg.includes('D='))[0] ?? ''
+
     // Check the ALL argument passed in CLI
     let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
     // If collection name is provided in arguments, extract it
@@ -77,13 +79,17 @@ class NewmanRunner {
     if (product.includes(',')) {
       product = product.split(',')
     }
+    // If data folder is provided in argument - extract it
+    if (data && data.includes('=')) {
+      data = data.split('=')[1]
+    }
     // If environment name is provided in arguments, extract it
     if (envName?.includes('=')) {
       envName = envName.split('=')[1]
     } else {
       envName = process.env.ENV || ''
     }
-    return { product: product, env: envName, runAll: runAll }
+    return { product: product, env: envName, data: data, runAll: runAll }
   }
   /**
    * @param {string} folderpath pathfolders from CLI arguments
@@ -115,7 +121,7 @@ class NewmanRunner {
    * <node command> <path to collections> <path to envs> <name of the collection> <name of the env>
    */
   static async runCollections(args, PARALLEL_RUN_COUNT = 1) {
-    let { product, env, runAll } = NewmanRunner.parseArgs(args)
+    let { product, env, data, runAll } = NewmanRunner.parseArgs(args)
     const environment = await NewmanRunner.getEnvironment(args[1], env)
     /**
      * Filters collections based on provided criteria.
@@ -160,7 +166,6 @@ class NewmanRunner {
       )
       return
     }
-    NewmanRunner.counter = collections.length
     const collectionToRun = collections.map(collection => {
       // @ts-ignore
       const file_name = collection
@@ -171,6 +176,7 @@ class NewmanRunner {
         collection: collection,
         environment: environment,
         insecure: true,
+        iterationData: data,
         reporters: NewmanRunner.NEWMAN_REPORT_OPTIONS,
         reporter: {
           htmlextra: {
@@ -186,6 +192,7 @@ class NewmanRunner {
         }
       }
     })
+    NewmanRunner.counter = collectionToRun.length
 
     /**
      * Runs Newman collections in parallel.

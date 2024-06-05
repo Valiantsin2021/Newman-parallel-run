@@ -52,7 +52,7 @@ Run all the collections that matching the MyCollection with no environment used:
 newman-parallel /path/to/collections /path/to/environments C=MyCollection
 ```
 
-Run collections for a specific name with a specific environment:
+Run collections for a specific name with a specific environment and/or data file:
 
 ```bash
 # this will run collection that have MyCollection name using Bash/GitBash
@@ -62,6 +62,10 @@ newman-parallel /path/to/collections /path/to/environments C=MyCollection E=MyEn
 # this will run collection that have MyCollection and MyCollection2 name using Bash/GitBash
 
 newman-parallel /path/to/collections /path/to/environments C=MyCollection,MyCollection2 E=MyEnvironment
+
+# this will run collection that have MyCollection and MyCollection2 with MyEnvironment and using the datafile name using Bash/GitBash
+
+newman-parallel /path/to/collections /path/to/environments C=MyCollection,MyCollection2 E=MyEnvironment D=< relative path to file >
 ```
 
 Run collections with a specific environment file(or without) depending on the environment variables specified:
