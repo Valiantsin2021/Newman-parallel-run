@@ -166,33 +166,40 @@ class NewmanRunner {
       )
       return
     }
-    const collectionToRun = collections.map(collection => {
-      // @ts-ignore
-      const file_name = collection
-        .split('/')
-        .at(-1)
-        .replace('.postman_collection.json', `_${env}`)
-      return {
-        collection: collection,
-        environment: environment,
-        insecure: true,
-        iterationData: data,
-        reporters: NewmanRunner.NEWMAN_REPORT_OPTIONS,
-        reporter: {
-          htmlextra: {
-            export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.html`
-          },
-          junitfull: {
-            export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.xml`
-          },
-          '@felipecrs/allure': {
-            collectionAsParentSuite: true,
-            export: NewmanRunner.ALLURE_REPORT_PATH
+    let collectionsToRun
+    try {
+      collectionsToRun = collections.map(collection => {
+        // @ts-ignore
+        const file_name = collection
+          .split('/')
+          .at(-1)
+          .replace('.postman_collection.json', `_${env}`)
+        return {
+          collection: collection,
+          environment: environment,
+          insecure: true,
+          iterationData: data,
+          reporters: NewmanRunner.NEWMAN_REPORT_OPTIONS,
+          reporter: {
+            htmlextra: {
+              export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.html`
+            },
+            junitfull: {
+              export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.xml`
+            },
+            '@felipecrs/allure': {
+              collectionAsParentSuite: true,
+              export: NewmanRunner.ALLURE_REPORT_PATH
+            }
           }
         }
-      }
-    })
-    NewmanRunner.counter = collectionToRun.length
+      })
+      NewmanRunner.counter = collectionsToRun.length
+    } catch (err) {
+      console.error(`Error parsing collection names from folder ${args[0]}`)
+      console.log(`Files in folder: ${collections}`)
+      process.exit()
+    }
 
     /**
      * Runs Newman collections in parallel.
@@ -201,9 +208,9 @@ class NewmanRunner {
      * @throws {Error} Throws an error if there is an issue during the collection run.
      */
     const parallelCollectionRun = function (done) {
-      for (let index = 0; index < collectionToRun.length; index++) {
+      for (let index = 0; index < collectionsToRun.length; index++) {
         newman
-          .run(collectionToRun[index], function (err) {
+          .run(collectionsToRun[index], function (err) {
             if (err) {
               throw err
             }
@@ -220,8 +227,20 @@ class NewmanRunner {
                 'cp -r allure-report/history allure-results || echo "no history folder found"'
               const generateReport =
                 'npx allure generate --clean && npx allure-patch ./allure-report && rm -r ./allure-results'
-              exec(createHistory)
-              exec(generateReport)
+              exec(createHistory, (error, stdout, stderr) => {
+                console.log(stdout)
+                console.error(stderr)
+                if (error) {
+                  console.error(error)
+                }
+              })
+              exec(generateReport, (error, stdout, stderr) => {
+                console.log(stdout)
+                console.error(stderr)
+                if (error) {
+                  console.error(error)
+                }
+              })
             }
           })
       }

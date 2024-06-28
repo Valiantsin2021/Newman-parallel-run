@@ -6,15 +6,15 @@ on: # yamllint disable-line rule:truthy
   push:
     tags:
       - "v*"
-
+permissions: write-all
 jobs:
   release:
     name: "Release"
 
     runs-on: "ubuntu-latest"
-
+    timeout-minutes: 5
     steps:
       - name: "Create release"
-        uses: "ergebnis/.github/actions/github/release/create@1.8.0"
+        uses: "ergebnis/.github/actions/github/release/create@1.9.0"
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
