@@ -6,3 +6,6 @@ test
 .eslintrc.js
 .gitignore
 .github
+collections
+environments
+allure-report

@@ -210,9 +210,9 @@ class NewmanRunner {
     const parallelCollectionRun = function (done) {
       for (let index = 0; index < collectionsToRun.length; index++) {
         newman
-          .run(collectionsToRun[index], function (err) {
-            if (err) {
-              throw err
+          .run(collectionsToRun[index], function (err, summary) {
+            if (err || summary.run.error || summary.run.failures.length) {
+              process.exitCode = 1
             }
             console.log(
               `\x1b[34m==> ${collections[index]} is finished \u235f\x1b[0m`
@@ -237,6 +237,7 @@ class NewmanRunner {
               exec(generateReport, (error, stdout, stderr) => {
                 console.log(stdout)
                 console.error(stderr)
+                console.log(`Process exited with code: ` + process.exitCode)
                 if (error) {
                   console.error(error)
                 }
