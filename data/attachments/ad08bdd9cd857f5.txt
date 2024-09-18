@@ -1,0 +1,24 @@
+{
+  "args": {},
+  "data": "Curabitur auctor, elit nec pulvinar porttitor, ex augue condimentum enim, eget suscipit urna felis quis neque.\nSuspendisse sit amet luctus massa, nec venenatis mi. Suspendisse tincidunt massa at nibh efficitur fringilla. Nam quis congue mi. Etiam volutpat.",
+  "files": {},
+  "form": {},
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t=1726690815.953",
+    "connection": "close",
+    "content-length": "256",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-66eb35ff-2050992c09f66d7864472d57",
+    "content-type": "text/plain",
+    "user-agent": "PostmanRuntime/7.39.1",
+    "accept": "*/*",
+    "cache-control": "no-cache",
+    "postman-token": "e4ea6e9f-bfd6-4b82-a8b7-2972152e524d",
+    "accept-encoding": "gzip, deflate, br",
+    "cookie": "sails.sid=s%3ATZ_ycIinwVie0Jujuf9IsAQwRAttju3e.2cL3JzN%2FO%2BrJ%2B%2BaXjA2cIvqIXl2YOiLQlrCi9lPp4Gk"
+  },
+  "json": null,
+  "url": "https://postman-echo.com/patch"
+}

@@ -1,0 +1,14 @@
+var responseJSON;
+
+try { 
+    responseJSON = JSON.parse(responseBody); 
+    tests['response is valid JSON'] = true;
+}
+catch (e) { 
+    responseJSON = {}; 
+    tests['response is valid JSON'] = false;
+}
+
+
+tests['response has PUT data'] = _.has(responseJSON, 'data');
+tests['response matches the data sent in request'] = (responseJSON.data && responseJSON.data.length === 256);
