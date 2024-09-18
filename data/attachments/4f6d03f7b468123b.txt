@@ -1,0 +1,24 @@
+{
+  "args": {},
+  "data": "Duis posuere augue vel cursus pharetra. In luctus a ex nec pretium. Praesent neque quam, tincidunt nec leo eget, rutrum vehicula magna.\nMaecenas consequat elementum elit, id semper sem tristique et. Integer pulvinar enim quis consectetur interdum volutpat.",
+  "files": {},
+  "form": {},
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t=1726690838.903",
+    "connection": "close",
+    "content-length": "256",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-66eb3616-5e3789e43cea627e785f9d0d",
+    "content-type": "text/plain",
+    "user-agent": "PostmanRuntime/7.39.1",
+    "accept": "*/*",
+    "cache-control": "no-cache",
+    "postman-token": "092717d4-035c-473d-a6ff-d3bb819a03b4",
+    "accept-encoding": "gzip, deflate, br",
+    "cookie": "sails.sid=s%3ARVMRdLRkyVRluTrSA6xWOCKavXJ7eUuK.OVLSM0cgMm3ahX1k2gKW9SejdO94Pg7zlWXMEkjfD64"
+  },
+  "json": null,
+  "url": "https://postman-echo.com/post"
+}
