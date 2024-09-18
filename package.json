@@ -1,10 +1,10 @@
 {
   "name": "newman-parallel",
-  "version": "1.0.15",
+  "version": "1.1.0",
   "description": "A framework to execute multiple Postman collections in parallel run with Newman.Includes Allure, HTML-extra and Junit reporters integrations",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js test/col test/env ALL E=MyEnvironment",
+    "test": "node index.js test/col test/env ALL E=Book",
     "lint": "npx eslint ./src/*.js --fix",
     "format": "prettier --write ./src/*.js"
   },
@@ -40,11 +40,11 @@
     "newman-parallel": "./index.js"
   },
   "dependencies": {
-    "@felipecrs/newman-reporter-allure": "1.1.2",
-    "allure-commandline": "2.29.0",
+    "newman-reporter-allure": "3.0.0",
+    "allure-commandline": "2.30.0",
     "allure-patch": "^1.0.3",
-    "async": "^3.2.5",
-    "newman": "6.1.2",
+    "async": "^3.2.6",
+    "newman": "6.2.1",
     "newman-reporter-htmlextra": "1.23.1",
     "newman-reporter-junitfull": "^1.1.1"
   },

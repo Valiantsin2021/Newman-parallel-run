@@ -33,12 +33,7 @@ class NewmanRunner {
    * @type {string[]}
    * @static
    */
-  static NEWMAN_REPORT_OPTIONS = [
-    'cli',
-    'htmlextra',
-    'junitfull',
-    '@felipecrs/allure'
-  ]
+  static NEWMAN_REPORT_OPTIONS = ['cli', 'htmlextra', 'junitfull', 'allure']
 
   /**
    * Reads files from a specified folder.
@@ -187,7 +182,7 @@ class NewmanRunner {
             junitfull: {
               export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.xml`
             },
-            '@felipecrs/allure': {
+            allure: {
               collectionAsParentSuite: true,
               export: NewmanRunner.ALLURE_REPORT_PATH
             }
@@ -237,7 +232,9 @@ class NewmanRunner {
               exec(generateReport, (error, stdout, stderr) => {
                 console.log(stdout)
                 console.error(stderr)
-                console.log(`Process exited with code: ` + process.exitCode)
+                console.log(
+                  `Process exited with code: ` + process.exitCode ? 1 : 0
+                )
                 if (error) {
                   console.error(error)
                 }

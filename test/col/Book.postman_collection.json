@@ -1,0 +1,157 @@
+{
+  "info": {
+    "_postman_id": "083657a8-cee1-4cb4-82c5-e143d80e4e8e",
+    "name": "Book Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "19372436",
+    "_collection_link": "https://www.postman.com/valiantsinlutchanka2021/workspace/my-workspace/collection/19372436-083657a8-cee1-4cb4-82c5-e143d80e4e8e?action=share&source=collection_link&creator=19372436"
+  },
+  "item": [
+    {
+      "name": "Basic Endpoint Tests",
+      "item": [
+        {
+          "name": "Get books list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let count = pm.collectionVariables.get('count')\r",
+                  "if(!count) {\r",
+                  "    count = 1\r",
+                  "}\r",
+                  "if( count < 3) {\r",
+                  "    count++\r",
+                  "    pm.collectionVariables.set('count', count)\r",
+                  "    postman.setNextRequest('Get books list')\r",
+                  "} else {\r",
+                  "    pm.collectionVariables.unset('count')\r",
+                  "    postman.setNextRequest(\"Get book\")\r",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/books",
+              "host": ["{{url}}"],
+              "path": ["books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "pm.environment.set(\"boookId\", response.id);\r",
+                  "pm.environment.set(\"bookAuthor\", response.author);\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test(\"Content-Type is present\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", 'application/json; charset=utf-8');\r",
+                  "});\r",
+                  "pm.test(\"Response time is less than 200ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/books/:id",
+              "host": ["{{url}}"],
+              "path": ["books", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "WCy0X_UyrYXQm-_"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Endpoint Tests",
+      "item": [
+        {
+          "name": "Get incorrect book id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/books/:id",
+              "host": ["{{url}}"],
+              "path": ["books", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "e1OU5RsDCINrMl"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Response time is less than 3000ms\", function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "count",
+      "value": ""
+    }
+  ]
+}
