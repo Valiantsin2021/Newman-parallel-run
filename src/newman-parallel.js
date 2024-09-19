@@ -33,7 +33,7 @@ class NewmanRunner {
    * @type {string[]}
    * @static
    */
-  static NEWMAN_REPORT_OPTIONS = ['cli', 'htmlextra', 'junitfull', 'allure']
+  static NEWMAN_REPORT_OPTIONS = ['cli', 'htmlextra', 'junit', 'allure']
 
   /**
    * Reads files from a specified folder.
@@ -57,13 +57,14 @@ class NewmanRunner {
   /**
    * Parses arguments to extract collection and environment names.
    * @param {string[]} args - Command line arguments.
-   * @returns {{product: string|undefined, env: string|undefined, data: string|undefined, runAll:boolean}} - Collection and environment names.
+   * @returns {{product: string|undefined, env: string|undefined, data: string|undefined, runAll:boolean, runReport: string|boolean}} - Collection and environment names.
    */
   static parseArgs(args) {
     // Extract collection and environment names from arguments
     let product = args.filter(arg => arg.includes('C='))[0] ?? ''
     let envName = args.filter(arg => arg.includes('E='))[0] ?? ''
     let data = args.filter(arg => arg.includes('D='))[0] ?? ''
+    let runReport = args.filter(arg => arg.includes('R='))[0] || ''
 
     // Check the ALL argument passed in CLI
     let runAll = args.filter(arg => /ALL/.test(arg)).length > 0
@@ -84,7 +85,16 @@ class NewmanRunner {
     } else {
       envName = process.env.ENV || ''
     }
-    return { product: product, env: envName, data: data, runAll: runAll }
+    if (runReport?.includes('=')) {
+      runReport = runReport.split('=')[1]
+    }
+    return {
+      product: product,
+      env: envName,
+      data: data,
+      runAll: runAll,
+      runReport: runReport
+    }
   }
   /**
    * @param {string} folderpath pathfolders from CLI arguments
@@ -116,7 +126,7 @@ class NewmanRunner {
    * <node command> <path to collections> <path to envs> <name of the collection> <name of the env>
    */
   static async runCollections(args, PARALLEL_RUN_COUNT = 1) {
-    let { product, env, data, runAll } = NewmanRunner.parseArgs(args)
+    let { product, env, data, runAll, runReport } = NewmanRunner.parseArgs(args)
     const environment = await NewmanRunner.getEnvironment(args[1], env)
     /**
      * Filters collections based on provided criteria.
@@ -174,19 +184,29 @@ class NewmanRunner {
           environment: environment,
           insecure: true,
           iterationData: data,
-          reporters: NewmanRunner.NEWMAN_REPORT_OPTIONS,
-          reporter: {
-            htmlextra: {
-              export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.html`
-            },
-            junitfull: {
-              export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.xml`
-            },
-            allure: {
-              collectionAsParentSuite: true,
-              export: NewmanRunner.ALLURE_REPORT_PATH
-            }
-          }
+          reporters:
+            runReport === 'false'
+              ? ['cli', 'junit']
+              : NewmanRunner.NEWMAN_REPORT_OPTIONS,
+          reporter:
+            runReport === 'false'
+              ? {
+                  junit: {
+                    export: NewmanRunner.NEWMAN_REPORT_PATH + file_name + '.xml'
+                  }
+                }
+              : {
+                  htmlextra: {
+                    export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.html`
+                  },
+                  junit: {
+                    export: `${NewmanRunner.NEWMAN_REPORT_PATH}${file_name}.xml`
+                  },
+                  allure: {
+                    collectionAsParentSuite: true,
+                    export: NewmanRunner.ALLURE_REPORT_PATH
+                  }
+                }
         }
       })
       NewmanRunner.counter = collectionsToRun.length
@@ -217,28 +237,33 @@ class NewmanRunner {
             global = globalCache
             NewmanRunner.counter -= 1
             if (NewmanRunner.counter === 0) {
-              console.log(`\x1b[34m==> Generating Allure report \u235f\x1b[0m`)
-              const createHistory =
-                'cp -r allure-report/history allure-results || echo "no history folder found"'
-              const generateReport =
-                'npx allure generate --clean && npx allure-patch ./allure-report && rm -r ./allure-results'
-              exec(createHistory, (error, stdout, stderr) => {
-                console.log(stdout)
-                console.error(stderr)
-                if (error) {
-                  console.error(error)
-                }
-              })
-              exec(generateReport, (error, stdout, stderr) => {
-                console.log(stdout)
-                console.error(stderr)
+              let { runReport } = NewmanRunner.parseArgs(args)
+              if (runReport !== 'false') {
                 console.log(
-                  `Process exited with code: ` + process.exitCode ? 1 : 0
+                  `\x1b[34m==> Generating Allure report \u235f\x1b[0m`
                 )
-                if (error) {
-                  console.error(error)
-                }
-              })
+                const createHistory =
+                  'cp -r allure-report/history allure-results || echo "no history folder found"'
+                const generateReport =
+                  'npx allure generate --clean && npx allure-patch ./allure-report && rm -r ./allure-results'
+                exec(createHistory, (error, stdout, stderr) => {
+                  console.log(stdout)
+                  console.error(stderr)
+                  if (error) {
+                    console.error(error)
+                  }
+                })
+                exec(generateReport, (error, stdout, stderr) => {
+                  console.log(stdout)
+                  console.error(stderr)
+                  console.log(
+                    `Process exited with code: ` + process.exitCode ? 1 : 0
+                  )
+                  if (error) {
+                    console.error(error)
+                  }
+                })
+              }
             }
           })
       }

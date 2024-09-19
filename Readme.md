@@ -4,24 +4,26 @@
 
 Newman Parallel is an npm package that executes Postman collections in parallel, saving time by running them concurrently. It supports reading collections and environments from separate folders and provides flexibility through command-line arguments.
 
+It will add value if you really have many postman collections to run.
+
 The package has integrated Newman, Allure (allure-results generated automatically), HTMLextra reporter, and Junit for CI.
 
 HTMLextra and Junit reports will e generated in report folder. Allure report will be generated to allure-report folder after all the collections have ran.
 
 For Allure report the command "npx allure generate --clean && npx allure-patch ./allure-report && rm -rf ./allure-report" will run automatically after all the collections run finished. It will generate the Allure html report, patch it as a single page app to be sent via email, webhook or published as a static webpage.
 
-#### Allure report with history will be generated only if you use GitBash/Bash. If you run the tests with Powershell - the history will not be generated automatically.
+#### Allure report with history will be generated only if you use GitBash/Bash. If you run the tests with Powershell - the allure history will not be generated automatically.
 
 ## Installation
 
 ```bash
-npm install -g newman-parallel
+npm install -D newman-parallel
 ```
 
 ### Usage
 
 ```bash
-newman-parallel [options]
+npx newman-parallel [options]
 ```
 
 ### Command-Line Options
@@ -35,6 +37,10 @@ newman-parallel [options]
 - C=(name): (Required if no ALL arg provided or no env variables set) Name of the collection/product to filter the collections.
 
 - E=(name): (Optional) Name of the environment to use.
+
+- R=(name): (Optional) pass false if you do not need the reports to be generated.
+
+- D=(path): (Optional) Path to the data file.
   
 - ALL: (Required if no C=<name> argument provided or no env variables set) to run all the collections from the forlder
 
@@ -65,7 +71,7 @@ newman-parallel /path/to/collections /path/to/environments C=MyCollection,MyColl
 
 # this will run collection that have MyCollection and MyCollection2 with MyEnvironment and using the datafile name using Bash/GitBash
 
-newman-parallel /path/to/collections /path/to/environments C=MyCollection,MyCollection2 E=MyEnvironment D=< relative path to file >
+newman-parallel /path/to/collections /path/to/environments C=MyCollection,MyCollection2 E=MyEnvironment D=< relative path to data file >
 ```
 
 Run collections with a specific environment file(or without) depending on the environment variables specified:
@@ -95,6 +101,8 @@ newman-parallel /path/to/collections /path/to/environments ALL E=MyEnvironment
 If no collection/product name and ALL arg provided, the script runs all collections in the specified folder.
 
 If no environment name is provided, the script does not use any environment.
+
+If no R=false arg provided the reports will be generated automatically.
 
 
 ### Contributing
