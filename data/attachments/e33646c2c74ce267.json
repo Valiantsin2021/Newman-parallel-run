@@ -1,0 +1,12 @@
+{
+    "Content-Type": "application/x-www-form-urlencoded",
+    "User-Agent": "PostmanRuntime/7.39.1",
+    "Accept": "*/*",
+    "Cache-Control": "no-cache",
+    "Postman-Token": "31038862-dd9d-4823-ac65-0415dd190dee",
+    "Host": "postman-echo.com",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Content-Length": "12",
+    "Cookie": "sails.sid=s%3Asm-0e-foxu4SLd7_yVHG9IS9YPJb-C-j.%2FHFp8PNkPgGDAND4j3MxkFTEGMLxoBAs8ioNFhvtqbY"
+}

@@ -1,0 +1,28 @@
+{
+  "args": {},
+  "data": "",
+  "files": {},
+  "form": {
+    "strange": "boom"
+  },
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t=1726776426.666",
+    "connection": "close",
+    "content-length": "12",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-66ec846a-7c0d0f8d554f5d23312e2aa9",
+    "content-type": "application/x-www-form-urlencoded",
+    "user-agent": "PostmanRuntime/7.39.1",
+    "accept": "*/*",
+    "cache-control": "no-cache",
+    "postman-token": "31038862-dd9d-4823-ac65-0415dd190dee",
+    "accept-encoding": "gzip, deflate, br",
+    "cookie": "sails.sid=s%3Asm-0e-foxu4SLd7_yVHG9IS9YPJb-C-j.%2FHFp8PNkPgGDAND4j3MxkFTEGMLxoBAs8ioNFhvtqbY"
+  },
+  "json": {
+    "strange": "boom"
+  },
+  "url": "https://postman-echo.com/post"
+}
