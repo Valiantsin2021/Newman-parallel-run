@@ -283,11 +283,4 @@ class NewmanRunner {
   }
 }
 
-const args = process.argv.slice(2)
-if (args.length < 2) {
-  console.error(
-    "\x1b[31mPlease provide path to the collections and environments files\nEx: './collections' './environments'\x1b[0m"
-  )
-  process.exit()
-}
 module.exports = NewmanRunner
