@@ -4,7 +4,7 @@ const NewmanRunner = require('./src/newman-parallel.js')
 const args = process.argv.slice(2)
 function showHelp() {
   console.log(`
-Usage: npx jtocsv [options]
+Usage: npx newman-parallel [options]
 
 Options:
 -h, --help      Show help message
