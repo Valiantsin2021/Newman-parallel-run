@@ -1,0 +1,9 @@
+{
+    "Date": "Thu, 24 Oct 2024 22:51:31 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Content-Length": "1007",
+    "Connection": "keep-alive",
+    "Server": "nginx/1.25.3",
+    "ETag": "W/\"3ef-9OjrCDvH0LFzosCX+J6zSrsKxG8\"",
+    "set-cookie": "sails.sid=s%3AX2e9JdMZOty3XYz3Wuny_2pSR5hYljBR.JzDHpTNgQRTpVMFxk3TX64gSdhfqeyACgDvRdfii%2Big; Path=/; HttpOnly"
+}
