@@ -1,0 +1,19 @@
+{
+  "args": {
+    "test": "123"
+  },
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t=1729809996.010",
+    "connection": "close",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-671ace4c-74d6638a389b1f767465f3c9",
+    "user-agent": "PostmanRuntime/7.39.1",
+    "accept": "*/*",
+    "cache-control": "no-cache",
+    "postman-token": "e8d84788-131a-46c8-a2b0-f021f9457aba",
+    "accept-encoding": "gzip, deflate, br"
+  },
+  "url": "https://postman-echo.com/get?test=123"
+}
