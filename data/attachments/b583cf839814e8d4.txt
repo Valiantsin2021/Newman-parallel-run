@@ -1,2 +1,0 @@
-level: warn, messages: Using "tests" is deprecated. Use "pm.test()" instead.
-level: warn, messages: Using "_" is deprecated. Use "require('lodash')" instead.
